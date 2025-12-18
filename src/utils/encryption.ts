@@ -94,7 +94,28 @@ export function playfairEncrypt(text: string, key: string = 'KEY'): EncryptionRe
 
 export function playfairDecrypt(text: string, key: string = 'KEY'): EncryptionResult {
   const matrix = createPlayfairMatrix(key);
-  text = text.toUpperCase().replace(/[^A-Z]/g, '');
+
+  // Make sure we mirror encrypt preprocessing: map J -> I and strip non-letters
+  text = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+
+  // If ciphertext is odd-length, make it even (prevents undefined char access)
+  if (text.length % 2 !== 0) text += 'X';
+
+  // Build fast lookup map: letter -> [row, col]
+  const pos = new Map<string, [number, number]>();
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      pos.set(matrix[r][c], [r, c]);
+    }
+  }
+
+  // Defensive: ensure every letter in text exists in the matrix (should, after J->I)
+  for (const ch of text) {
+    if (!pos.has(ch)) {
+      // Return a friendly, non-crashing message so UI won't die
+      return { result: `Invalid character in ciphertext: '${ch}'. Playfair matrix uses I instead of J.`, key };
+    }
+  }
 
   let result = '';
 
@@ -102,24 +123,23 @@ export function playfairDecrypt(text: string, key: string = 'KEY'): EncryptionRe
     const char1 = text[i];
     const char2 = text[i + 1];
 
-    let row1 = -1, col1 = -1, row2 = -1, col2 = -1;
-    for (let r = 0; r < 5; r++) {
-      for (let c = 0; c < 5; c++) {
-        if (matrix[r][c] === char1) { row1 = r; col1 = c; }
-        if (matrix[r][c] === char2) { row2 = r; col2 = c; }
-      }
-    }
+    // We already ensured both are present in pos
+    const [row1, col1] = pos.get(char1)!;
+    const [row2, col2] = pos.get(char2)!;
 
     if (row1 === row2) {
+      // same row: move left
       result += matrix[row1][(col1 - 1 + 5) % 5] + matrix[row2][(col2 - 1 + 5) % 5];
     } else if (col1 === col2) {
+      // same column: move up
       result += matrix[(row1 - 1 + 5) % 5][col1] + matrix[(row2 - 1 + 5) % 5][col2];
     } else {
+      // rectangle swap
       result += matrix[row1][col2] + matrix[row2][col1];
     }
   }
 
-  // optional: remove trailing X if it was padding
+  // optional: remove trailing padding X (if it was added)
   if (result.endsWith('X')) result = result.slice(0, -1);
 
   return { result, key };
