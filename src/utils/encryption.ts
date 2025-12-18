@@ -169,46 +169,42 @@ export function railFenceDecrypt(text: string, rails: number = 3): EncryptionRes
   if (rails < 2) rails = 2;
   text = text.toUpperCase().replace(/[^A-Z]/g, '');
 
-  const fence: string[][] = Array(rails).fill(null).map(() => []);
-  let rail = 0;
-  let direction = 1;
+  const len = text.length;
+  if (len === 0) return { result: '', key: rails.toString() };
 
-  const lengths: number[] = Array(rails).fill(0);
-  for (let i = 0; i < text.length; i++) {
-    lengths[rail]++;
-    if (rail === 0) direction = 1;
-    else if (rail === rails - 1) direction = -1;
-    rail += direction;
+  // 1) Build pattern (rail index for each character position)
+  const pattern: number[] = new Array(len);
+  let rail = 0;
+  let dir = 1;
+  for (let i = 0; i < len; i++) {
+    pattern[i] = rail;
+    if (rail === 0) dir = 1;
+    else if (rail === rails - 1) dir = -1;
+    rail += dir;
   }
 
+  // 2) Count how many chars per rail
+  const counts = Array(rails).fill(0);
+  for (let i = 0; i < len; i++) counts[pattern[i]]++;
+
+  // 3) Fill rails with the ciphertext slices
+  const fence: string[][] = Array.from({ length: rails }, () => []);
   let idx = 0;
   for (let r = 0; r < rails; r++) {
-    for (let c = 0; c < lengths[r]; c++) {
-      fence[r][c] = text[idx++];
+    for (let k = 0; k < counts[r]; k++) {
+      fence[r].push(text[idx++]);
     }
   }
 
-  rail = 0;
-  direction = 1;
+  // 4) Reconstruct plaintext by walking the pattern,
+  //    using an index per rail (faster than shift())
+  const pos = Array(rails).fill(0);
   let result = '';
-  for (let i = 0; i < text.length; i++) {
-    const row = rail;
-    let col = 0;
-    for (let j = 0; j < fence[row].length; j++) {
-      let tempRail = 0;
-      let tempDir = 1;
-      for (let k = 0; k < j; k++) {
-        if (tempRail === 0) tempDir = 1;
-        else if (tempRail === rails - 1) tempDir = -1;
-        tempRail += tempDir;
-      }
-      if (tempRail === rail) col++;
-    }
-    result += fence[row][col - 1];
-    if (rail === 0) direction = 1;
-    else if (rail === rails - 1) direction = -1;
-    rail += direction;
+  for (let i = 0; i < len; i++) {
+    const r = pattern[i];
+    result += fence[r][pos[r]++];
   }
+
   return { result, key: rails.toString() };
 }
 
