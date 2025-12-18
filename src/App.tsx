@@ -8,6 +8,7 @@ import { HillPage } from './pages/HillPage';
 import { OtpPage } from './pages/OtpPage';
 import { CaesarPage } from './pages/CaesarPage';
 import { RowColumnPage } from './pages/RowColumnPage';
+import { useEffect } from 'react';
 
 function App() {
   useEffect(() => {
