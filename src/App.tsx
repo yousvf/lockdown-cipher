@@ -10,7 +10,9 @@ import { CaesarPage } from './pages/CaesarPage';
 import { RowColumnPage } from './pages/RowColumnPage';
 
 function App() {
-  useEffect(()=>{console.log("borhom")}, [])
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
