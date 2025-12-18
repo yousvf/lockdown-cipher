@@ -9,8 +9,10 @@ import { OtpPage } from './pages/OtpPage';
 import { CaesarPage } from './pages/CaesarPage';
 import { RowColumnPage } from './pages/RowColumnPage';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  useState
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
