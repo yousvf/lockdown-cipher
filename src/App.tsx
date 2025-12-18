@@ -27,6 +27,7 @@ function ScrollToTop() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop></ScrollToTop>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/playfair" element={<PlayfairPage />} />
