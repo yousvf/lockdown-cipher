@@ -24,8 +24,6 @@ function ScrollToTop() {
   return null;
 }
 
-export default ScrollToTop;
-
 function App() {
   return (
     <BrowserRouter>
