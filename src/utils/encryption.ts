@@ -190,7 +190,7 @@ export function monoalphabeticEncrypt(text: string, key: string = 'QWERTYUIOPASD
   let result = '';
   for (const char of text) {
     const idx = alphabet.indexOf(char);
-    result += idx >= 0 ? key[idx] : char;
+    result += key[idx];
   }
   return { result, key };
 }
