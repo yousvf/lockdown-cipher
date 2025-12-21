@@ -61,7 +61,7 @@ const algorithms = [
   {
     id: 'rowcolumn',
     name: 'Row Column Transposition',
-    description: 'Columnar rearrangement based on keyword ordering',
+    description: 'Columnar rearrangement using numeric permutations',
     icon: Columns,
     color: 'from-lime-500 to-green-600',
     bgGlow: 'lime',
