@@ -366,9 +366,7 @@ function isValidPermutation(perm: number[]): boolean {
 
 function parsePermutation(keyStr: string): number[] | null {
   const nums = keyStr.trim().split(/[\s,]+/).map(n => parseInt(n)).filter(n => !isNaN(n));
-  if (isValidPermutation(nums)) {
-    return nums;
-  }
+  if (isValidPermutation(nums)) return nums;
   return null;
 }
 
@@ -411,8 +409,9 @@ export function rowColumnDecrypt(text: string, key: string = '1 2 3 4 5 6'): Enc
 
   const cols = perm.length;
   const rows = Math.ceil(text.length / cols);
-
-  const matrix: string[][] = Array(rows).fill(null).map(() => Array(cols));
+  
+  const matrix: string[][] = [];
+  // const matrix: string[][] = Array(rows).fill(null).map(() => Array(cols));
   let idx = 0;
 
   for (let i = 0; i < cols; i++) {
