@@ -211,7 +211,8 @@ export function railFenceDecrypt(text: string, rails: number = 3): EncryptionRes
 // MONOALPHABETIC CIPHER
 export function monoalphabeticEncrypt(text: string, key: string = 'QWERTYUIOPASDFGHJKLZXCVBNM'): EncryptionResult {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  text = text.toUpperCase();
+  text = text.toUpperCase().replace(/[^A-Z]/g, '');
+  key = key.toUpperCase().replace(/[^A-Z]/g, '');
 
   let result = '';
   for (const char of text) {
@@ -223,7 +224,8 @@ export function monoalphabeticEncrypt(text: string, key: string = 'QWERTYUIOPASD
 
 export function monoalphabeticDecrypt(text: string, key: string = 'QWERTYUIOPASDFGHJKLZXCVBNM'): EncryptionResult {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  text = text.toUpperCase();
+  text = text.toUpperCase().replace(/[^A-Z]/g, '');
+  key = key.toUpperCase().replace(/[^A-Z]/g, '');
 
   let result = '';
   for (const char of text) {
