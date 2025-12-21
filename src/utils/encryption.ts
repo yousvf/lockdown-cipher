@@ -382,6 +382,7 @@ export function rowColumnEncrypt(text: string, key: string = '1 2 3 4 5 6'): Enc
 }
 
 export function rowColumnDecrypt(text: string, key: string = '1 2 3 4 5 6'): EncryptionResult {
+  text = text.toUpperCase().replace(/[^A-Z]/g, '');
   const perm = parsePermutation(key);
 
   if (!perm) {
