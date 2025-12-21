@@ -108,15 +108,7 @@ export function playfairDecrypt(text: string, key: string = 'KEY'): EncryptionRe
       pos.set(matrix[r][c], [r, c]);
     }
   }
-
-  // Defensive: ensure every letter in text exists in the matrix (should, after J->I)
-  for (const ch of text) {
-    if (!pos.has(ch)) {
-      // Return a friendly, non-crashing message so UI won't die
-      return { result: `Invalid character in ciphertext: '${ch}'. Playfair matrix uses I instead of J.`, key };
-    }
-  }
-
+  
   let result = '';
 
   for (let i = 0; i < text.length; i += 2) {
