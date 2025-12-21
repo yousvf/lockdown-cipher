@@ -233,7 +233,7 @@ export function monoalphabeticDecrypt(text: string, key: string = 'QWERTYUIOPASD
   return { result, key };
 }
 
-// POLYALPHABETIC CIPHER (using multiple keys)
+// POLYALPHABETIC CIPHER
 export function polyalphabeticEncrypt(text: string, key: string = 'KEY'): EncryptionResult {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   text = text.toUpperCase().replace(/[^A-Z]/g, '');
@@ -341,15 +341,16 @@ export function otpDecrypt(text: string, key: string): EncryptionResult {
 
 // CAESAR CIPHER
 export function caesarEncrypt(text: string, shift: number = 3): EncryptionResult {
-  const result = text.split('').map(char => {
-    if (char.match(/[a-z]/i)) {
-      const code = char.charCodeAt(0);
-      const isUpperCase = code >= 65 && code <= 90;
-      const base = isUpperCase ? 65 : 97;
-      return String.fromCharCode(((code - base + shift) % 26) + base);
-    }
-    return char;
-  }).join('');
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  text = text.toUpperCase().replace(/[^A-Z]/g, '');
+
+  let result = '';
+  for (let i = 0; i < text.length; i++) {
+    const textIdx = alphabet.indexOf(text[i]);
+    result += alphabet[(textIdx + shift) % 26];
+  }
+
   return { result, key: shift.toString() };
 }
 
