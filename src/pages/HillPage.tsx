@@ -23,7 +23,7 @@ export function HillPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  const keyMatrix = [[6, 24], [1, 8]];
+  const keyMatrix = [[3, 3], [2, 5]];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
