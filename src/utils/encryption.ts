@@ -266,7 +266,7 @@ export function polyalphabeticDecrypt(text: string, key: string = 'KEY'): Encryp
 // HILL CIPHER (simplified 2x2)
 const mod26 = (n: number) => ((n % 26) + 26) % 26;
 
-export function hillEncrypt(text: string, keyMatrix: number[][] = [[6, 24], [1, 8]]): EncryptionResult {
+export function hillEncrypt(text: string, keyMatrix: number[][] = [[3, 3], [2, 5]]): EncryptionResult {
   text = text.toUpperCase().replace(/[^A-Z]/g, '');
   if (text.length % 2 !== 0) text += 'X';
 
@@ -283,7 +283,7 @@ export function hillEncrypt(text: string, keyMatrix: number[][] = [[6, 24], [1, 
   return { result, key: JSON.stringify(keyMatrix) };
 }
 
-export function hillDecrypt(text: string, keyMatrix: number[][] = [[6, 24], [1, 8]]): EncryptionResult {
+export function hillDecrypt(text: string, keyMatrix: number[][] = [[3, 3], [2, 5]]): EncryptionResult {
   text = text.toUpperCase().replace(/[^A-Z]/g, '');
   if (text.length % 2 !== 0) text += 'X';
 
