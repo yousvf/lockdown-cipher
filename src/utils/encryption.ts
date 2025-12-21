@@ -410,7 +410,6 @@ export function rowColumnDecrypt(text: string, key: string = '1 2 3 4 5 6'): Enc
   const cols = perm.length;
   const rows = Math.ceil(text.length / cols);
   
-  // const matrix: string[][] = [];
   const matrix: string[][] = Array(rows).fill(null).map(() => Array(cols).fill(''));
   let idx = 0;
 
