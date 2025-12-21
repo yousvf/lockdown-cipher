@@ -172,7 +172,6 @@ export function railFenceDecrypt(text: string, rails: number = 3): EncryptionRes
   const len = text.length;
   if (len === 0) return { result: '', key: rails.toString() };
 
-  // 1) Build pattern (rail index for each character position)
   const pattern: number[] = new Array(len);
   let rail = 0;
   let dir = 1;
@@ -183,11 +182,9 @@ export function railFenceDecrypt(text: string, rails: number = 3): EncryptionRes
     rail += dir;
   }
 
-  // 2) Count how many chars per rail
   const counts = Array(rails).fill(0);
   for (let i = 0; i < len; i++) counts[pattern[i]]++;
 
-  // 3) Fill rails with the ciphertext slices
   const fence: string[][] = Array.from({ length: rails }, () => []);
   let idx = 0;
   for (let r = 0; r < rails; r++) {
@@ -196,8 +193,6 @@ export function railFenceDecrypt(text: string, rails: number = 3): EncryptionRes
     }
   }
 
-  // 4) Reconstruct plaintext by walking the pattern,
-  //    using an index per rail (faster than shift())
   const pos = Array(rails).fill(0);
   let result = '';
   for (let i = 0; i < len; i++) {
