@@ -13,7 +13,6 @@ export function createPlayfairMatrix(key: string): string[][] {
   const matrix: string[][] = [];
   let letters = '';
 
-  // add key letters first
   for (const ch of key) {
     if (!seen.has(ch)) {
       letters += ch;
@@ -21,7 +20,6 @@ export function createPlayfairMatrix(key: string): string[][] {
     }
   }
 
-  // add remaining letters A-Z (skip J)
   for (let i = 0; i < 26; i++) {
     const ch = String.fromCharCode(65 + i);
     if (ch === 'J') continue;
@@ -31,14 +29,12 @@ export function createPlayfairMatrix(key: string): string[][] {
     }
   }
 
-  // build 5x5 matrix
   for (let r = 0; r < 5; r++) {
     matrix.push(letters.slice(r * 5, r * 5 + 5).split(''));
   }
   return matrix;
 }
 
-// Preprocess text into digraphs (handle repeated letters and odd length)
 function preprocessPlayfairText(text: string): string {
   text = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
   let result = '';
@@ -95,13 +91,10 @@ export function playfairEncrypt(text: string, key: string = 'KEY'): EncryptionRe
 export function playfairDecrypt(text: string, key: string = 'KEY'): EncryptionResult {
   const matrix = createPlayfairMatrix(key);
 
-  // Make sure we mirror encrypt preprocessing: map J -> I and strip non-letters
   text = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
 
-  // If ciphertext is odd-length, make it even (prevents undefined char access)
   if (text.length % 2 !== 0) text += 'X';
 
-  // Build fast lookup map: letter -> [row, col]
   const pos = new Map<string, [number, number]>();
   for (let r = 0; r < 5; r++) {
     for (let c = 0; c < 5; c++) {
@@ -115,18 +108,14 @@ export function playfairDecrypt(text: string, key: string = 'KEY'): EncryptionRe
     const char1 = text[i];
     const char2 = text[i + 1];
 
-    // We already ensured both are present in pos
     const [row1, col1] = pos.get(char1)!;
     const [row2, col2] = pos.get(char2)!;
 
     if (row1 === row2) {
-      // same row: move left
       result += matrix[row1][(col1 - 1 + 5) % 5] + matrix[row2][(col2 - 1 + 5) % 5];
     } else if (col1 === col2) {
-      // same column: move up
       result += matrix[(row1 - 1 + 5) % 5][col1] + matrix[(row2 - 1 + 5) % 5][col2];
     } else {
-      // rectangle swap
       result += matrix[row1][col2] + matrix[row2][col1];
     }
   }
