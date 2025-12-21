@@ -203,7 +203,7 @@ export function monoalphabeticDecrypt(text: string, key: string = 'QWERTYUIOPASD
   let result = '';
   for (const char of text) {
     const idx = key.indexOf(char);
-    result += idx >= 0 ? alphabet[idx] : char;
+    result += alphabet[idx];
   }
   return { result, key };
 }
