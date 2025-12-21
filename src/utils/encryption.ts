@@ -285,6 +285,7 @@ const mod26 = (n: number) => ((n % 26) + 26) % 26;
 
 export function hillDecrypt(text: string, keyMatrix: number[][] = [[6, 24], [1, 8]]): EncryptionResult {
   text = text.toUpperCase().replace(/[^A-Z]/g, '');
+  if (text.length % 2 !== 0) text += 'X';
 
   const det = ((keyMatrix[0][0] * keyMatrix[1][1] - keyMatrix[0][1] * keyMatrix[1][0]) % 26 + 26) % 26;
   const detInv = modInverse(det, 26);
