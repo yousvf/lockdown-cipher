@@ -281,15 +281,17 @@ export function hillEncrypt(text: string, keyMatrix: number[][] = [[6, 24], [1, 
   return { result, key: JSON.stringify(keyMatrix) };
 }
 
+const mod26 = (n: number) => ((n % 26) + 26) % 26;
+
 export function hillDecrypt(text: string, keyMatrix: number[][] = [[6, 24], [1, 8]]): EncryptionResult {
   text = text.toUpperCase().replace(/[^A-Z]/g, '');
 
-  const det = (keyMatrix[0][0] * keyMatrix[1][1] - keyMatrix[0][1] * keyMatrix[1][0]) % 26;
+  const det = ((keyMatrix[0][0] * keyMatrix[1][1] - keyMatrix[0][1] * keyMatrix[1][0]) % 26 + 26) % 26;
   const detInv = modInverse(det, 26);
 
   const invMatrix = [
-    [(keyMatrix[1][1] * detInv) % 26, (-keyMatrix[0][1] * detInv + 26) % 26],
-    [(-keyMatrix[1][0] * detInv + 26) % 26, (keyMatrix[0][0] * detInv) % 26]
+    [mod26(keyMatrix[1][1] * detInv), mod26(-keyMatrix[0][1] * detInv)],
+    [mod26(-keyMatrix[1][0] * detInv), mod26(keyMatrix[0][0] * detInv)]
   ];
 
   return hillEncrypt(text, invMatrix);
