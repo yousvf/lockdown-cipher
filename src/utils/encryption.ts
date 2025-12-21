@@ -131,9 +131,6 @@ export function playfairDecrypt(text: string, key: string = 'KEY'): EncryptionRe
     }
   }
 
-  // optional: remove trailing padding X (if it was added)
-  if (result.endsWith('X')) result = result.slice(0, -1);
-
   return { result, key };
 }
 
