@@ -268,6 +268,10 @@ export function hillDecrypt(text: string, keyMatrix: number[][] = [[3, 3], [2, 5
   const det = ((keyMatrix[0][0] * keyMatrix[1][1] - keyMatrix[0][1] * keyMatrix[1][0]) % 26 + 26) % 26;
   const detInv = modInverse(det, 26);
 
+  if (detInv === null) {
+    return { result: 'Error: Key matrix does not have a valid inverse. The determinant must be coprime with 26.', key: JSON.stringify(keyMatrix) };
+  }
+
   const invMatrix = [
     [mod26(keyMatrix[1][1] * detInv), mod26(-keyMatrix[0][1] * detInv)],
     [mod26(-keyMatrix[1][0] * detInv), mod26(keyMatrix[0][0] * detInv)]
@@ -276,11 +280,11 @@ export function hillDecrypt(text: string, keyMatrix: number[][] = [[3, 3], [2, 5
   return hillEncrypt(text, invMatrix);
 }
 
-function modInverse(a: number, m: number): number {
+function modInverse(a: number, m: number): number | null {
   for (let x = 1; x < m; x++) {
     if ((a * x) % m === 1) return x;
   }
-  return 1;
+  return null;
 }
 
 // ONE-TIME PAD CIPHER

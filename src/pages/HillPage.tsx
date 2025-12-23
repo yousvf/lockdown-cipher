@@ -9,13 +9,14 @@ export function HillPage() {
   const [operation, setOperation] = useState<'encrypt' | 'decrypt'>('encrypt');
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
+  const [keyMatrix, setKeyMatrix] = useState<number[][]>([[3, 3], [2, 5]]);
 
   useEffect(() => {
     if (inputText) {
-      const result = operation === 'encrypt' ? hillEncrypt(inputText) : hillDecrypt(inputText);
+      const result = operation === 'encrypt' ? hillEncrypt(inputText, keyMatrix) : hillDecrypt(inputText, keyMatrix);
       setOutput(result.result);
     }
-  }, [inputText, operation]);
+  }, [inputText, operation, keyMatrix]);
 
   function handleCopy() {
     navigator.clipboard.writeText(output);
@@ -23,7 +24,12 @@ export function HillPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  const keyMatrix = [[3, 3], [2, 5]];
+  function handleMatrixChange(row: number, col: number, value: string) {
+    const newMatrix = keyMatrix.map(r => [...r]);
+    const num = parseInt(value) || 0;
+    newMatrix[row][col] = Math.max(0, Math.min(25, num));
+    setKeyMatrix(newMatrix);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -121,16 +127,24 @@ export function HillPage() {
             <h2 className="text-2xl font-semibold text-slate-200 mb-6 text-center">Encryption Key Matrix</h2>
 
             <div className="flex justify-center mb-8">
-              <div className="grid grid-cols-2 gap-4 p-6 bg-slate-800/40 rounded-xl border border-pink-500/20">
-                {keyMatrix.flat().map((val, i) => (
-                  <div
-                    key={i}
-                    className="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-pink-500/20 to-rose-500/20 text-pink-300 rounded-lg font-mono text-xl font-bold border border-pink-500/30 hover:from-pink-500 hover:to-rose-600 hover:text-white hover:scale-110 transition-all duration-300 animate-fade-in"
-                    style={{ animationDelay: `${i * 100}ms` }}
-                  >
-                    {val}
-                  </div>
-                ))}
+              <div>
+                <div className="grid grid-cols-2 gap-4 p-6 bg-slate-800/40 rounded-xl border border-pink-500/20 mb-4">
+                  {keyMatrix.map((row, rowIdx) =>
+                    row.map((val, colIdx) => (
+                      <input
+                        key={`${rowIdx}-${colIdx}`}
+                        type="number"
+                        min="0"
+                        max="25"
+                        value={val}
+                        onChange={(e) => handleMatrixChange(rowIdx, colIdx, e.target.value)}
+                        className="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-pink-500/20 to-rose-500/20 text-pink-300 rounded-lg font-mono text-xl font-bold border border-pink-500/30 hover:from-pink-500 hover:to-rose-600 hover:text-white transition-all duration-300 animate-fade-in focus:outline-none focus:ring-2 focus:ring-pink-500 text-center"
+                        style={{ animationDelay: `${(rowIdx * 2 + colIdx) * 100}ms` }}
+                      />
+                    ))
+                  )}
+                </div>
+                <p className="text-sm text-slate-400 text-center">Enter values 0-25</p>
               </div>
             </div>
 
