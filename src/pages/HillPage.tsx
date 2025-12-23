@@ -133,12 +133,12 @@ export function HillPage() {
                     row.map((val, colIdx) => (
                       <input
                         key={`${rowIdx}-${colIdx}`}
-                        type="number"
-                        min="0"
-                        max="25"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength="2"
                         value={val}
                         onChange={(e) => handleMatrixChange(rowIdx, colIdx, e.target.value)}
-                        className="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-pink-500/20 to-rose-500/20 text-pink-300 rounded-lg font-mono text-xl font-bold border border-pink-500/30 hover:from-pink-500 hover:to-rose-600 hover:text-white transition-all duration-300 animate-fade-in focus:outline-none focus:ring-2 focus:ring-pink-500 text-center"
+                        className="w-16 h-16 bg-slate-700 text-white rounded-lg font-mono text-xl font-bold border border-pink-500/50 hover:border-pink-500 hover:bg-slate-600 transition-all duration-300 animate-fade-in focus:outline-none focus:ring-2 focus:ring-pink-500 text-center"
                         style={{ animationDelay: `${(rowIdx * 2 + colIdx) * 100}ms` }}
                       />
                     ))
